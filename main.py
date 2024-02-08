@@ -1,5 +1,7 @@
-#!/usr/bin/env python3
-# This Python file uses the following encoding: utf-8
+#Schrauber Steuerung auf Microcontroller Basis
+#Technikerarbeit Julika Haubner 2024
+#Firma Hansgrohe SE - Berufliche Schulen Oberndorf-Sulz
+
 import sys
 
 from PySide6.QtWidgets import QApplication

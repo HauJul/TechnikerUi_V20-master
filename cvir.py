@@ -1,3 +1,7 @@
+#Communication to Desoutter CVIR2
+#Sets programm according to processdata
+#Get screw results
+
 from gpiozero.pins.rpigpio import RPiGPIOFactory
 from gpiozero import Device, DigitalInputDevice, DigitalOutputDevice
 
@@ -16,7 +20,7 @@ class CVIR:
         self.inLOESEN = DigitalOutputDevice(6)
         self.inRESET = DigitalOutputDevice(7)
 
-        # Outputs CVIR 2
+        # Outputs CVIR2
         self.outZYK1 = DigitalInputDevice(8, pull_up=True)
         self.outZYK2 = DigitalInputDevice(9, pull_up=True)
         self.outZYK4 = DigitalInputDevice(10, pull_up=True)
@@ -26,20 +30,21 @@ class CVIR:
         self.outNIO = DigitalInputDevice(14, pull_up=True)
         self.outIOZ = DigitalInputDevice(15, pull_up=True)
 
-        # Outputs Hand Control Element
+        # Outputs hand control element
         self.outSF1 = DigitalInputDevice(19, pull_up=True)
         self.outSF2 = DigitalInputDevice(20, pull_up=True)
 
         self.step = 0
 
-        # Interupt Hand Control Element
+        # Interrupts hand control element
         self.outSF1.when_activated = self.__button_press
         self.outSF1.when_deactivated = self.__button_release
         self.outSF2.when_activated = self.__button_press
         self.outSF2.when_deactivated = self.__button_release
 
+    #set screw program according to processdata
     def set_cyc(self, cyc):
-        scyc = format(cyc, "b").zfill(3)
+        scyc = format(cyc, "b").zfill(3) #convert int to bcd
         if scyc[2] == "0":
             self.inZYK1.off()
         else:
@@ -59,6 +64,7 @@ class CVIR:
     def lock_start(self):
         self.inSPFREI.off()
 
+    #react on button press of hand control element
     def __button_press(self):
         state_sf1 = self.outSF1.value
         state_sf2 = self.outSF2.value

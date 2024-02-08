@@ -1,58 +1,13 @@
+#Settingswindow of Application
+#Shows Processparameter of product, tools and programms
+#Possibility to add, change and delete parameters
+
 import pandas as pd
 from PySide6.QtWidgets import QMainWindow, QDialog, QMessageBox, QTableWidgetItem
 from PySide6.QtCore import Qt
 
 from UI.ui_settingwindow import Ui_SettingWindow
 from UI.ui_newdialog import Ui_NewDialog
-
-
-# Read Product, Tool and Programm values and show in Tablewidgets
-def read_csv_file(filepath, table):
-    # Read file and create DataFrame
-    file = open(filepath, 'r')
-    df = pd.read_csv(file, delimiter=";", index_col=0)
-    file.close()
-    # Set table size
-    table.setRowCount(df.shape[0])
-    table.setColumnCount(df.shape[1])
-    # Set table headers
-    headers = list(df)
-    table.setHorizontalHeaderLabels(headers)
-    # Set index values
-    index = df.index.tolist()
-    table.setVerticalHeaderLabels(map(str, index))
-    # Set table values
-    df_array = df.values
-    for row in range(df.shape[0]):
-        for col in range(df.shape[1]):
-            table.setItem(row, col, QTableWidgetItem(str(df_array[row, col])))
-
-
-# Save actual table values in file when button 'save' is pressed
-def save_csv_file(filepath, table):
-    headers = []
-    index = []
-
-    for i in range(table.model().columnCount()):
-        headers.append(table.horizontalHeaderItem(i).text())
-    for j in range(table.model().rowCount()):
-        index.append(table.verticalHeaderItem(j).text())
-    # Create DataFrame with Headers and Indexes
-    df = pd.DataFrame(columns=headers, index=index)
-    # Save values in DataFrame
-    for row in range(table.rowCount()):
-        for col in range(table.columnCount()):
-            # If value is a number save as integer
-            try:
-                df.at[index[row], headers[col]] = int(table.item(row, col).text())
-            # If value is a  text save as string
-            except ValueError:
-                df.at[index[row], headers[col]] = table.item(row, col).text()
-            # If no value safe empty string
-            except AttributeError:
-                df.at[index[row], headers[col]] = 0
-    # Save DataFrame in CSV file
-    df.to_csv(filepath, sep=";")
 
 
 class SettingWindow(QMainWindow):
@@ -115,9 +70,55 @@ class SettingWindow(QMainWindow):
         if not len(index) == 0:
             self.ui.tbl_prog.removeRow(index[0].row())
 
+# Read Product, Tool and Programm values and show in Tablewidgets
+def read_csv_file(filepath, table):
+    # Read file and create DataFrame
+    file = open(filepath, 'r')
+    df = pd.read_csv(file, delimiter=";", index_col=0)
+    file.close()
+    # Set table size
+    table.setRowCount(df.shape[0])
+    table.setColumnCount(df.shape[1])
+    # Set table headers
+    headers = list(df)
+    table.setHorizontalHeaderLabels(headers)
+    # Set index values
+    index = df.index.tolist()
+    table.setVerticalHeaderLabels(map(str, index))
+    # Set table values
+    df_array = df.values
+    for row in range(df.shape[0]):
+        for col in range(df.shape[1]):
+            table.setItem(row, col, QTableWidgetItem(str(df_array[row, col])))
 
 
+# Save actual table values in file when button 'save' is pressed
+def save_csv_file(filepath, table):
+    headers = []
+    index = []
 
+    for i in range(table.model().columnCount()):
+        headers.append(table.horizontalHeaderItem(i).text())
+    for j in range(table.model().rowCount()):
+        index.append(table.verticalHeaderItem(j).text())
+    # Create DataFrame with Headers and Indexes
+    df = pd.DataFrame(columns=headers, index=index)
+    # Save values in DataFrame
+    for row in range(table.rowCount()):
+        for col in range(table.columnCount()):
+            # If value is a number save as integer
+            try:
+                df.at[index[row], headers[col]] = int(table.item(row, col).text())
+            # If value is a  text save as string
+            except ValueError:
+                df.at[index[row], headers[col]] = table.item(row, col).text()
+            # If no value safe empty string
+            except AttributeError:
+                df.at[index[row], headers[col]] = 0
+    # Save DataFrame in CSV file
+    df.to_csv(filepath, sep=";")
+
+#Dialog to create new product, tool or program item
 
 class NewDialog(QDialog):
     def __init__(self, new_item_values):

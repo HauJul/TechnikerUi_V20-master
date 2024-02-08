@@ -1,3 +1,7 @@
+#Mainwindow of Applikation
+#Displays Processdata
+#Possibility to Controll Process and open Settingswindow
+
 from PySide6.QtWidgets import QMainWindow, QDialog, QMessageBox
 from PySide6.QtCore import Qt
 
@@ -46,6 +50,8 @@ class MainWindow(QMainWindow):
             self.ui.txt_name.setText("Produkt nicht bekannt")
             self.ui.txt_tool.setText("")
             self.ui.txt_process.setText("")
+            self.ui.txt_torque.setText("")
+            self.ui.txt_description.setText("")
 
     def tool_is_false(self):
         self.ui.lbl_process_state.setText("Einsatz wechseln!")
@@ -108,6 +114,7 @@ class MainWindow(QMainWindow):
     def reset_nio(self):
         self.ui.lbl_process_state.setText("Schrauben wiederholen!")
 
+#Password Dialog to protect Settingswindow
 class PasswordDialog(QDialog):
     def __init__(self, setting_window):
         super().__init__()
